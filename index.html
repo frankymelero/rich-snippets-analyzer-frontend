@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rich Snippet suggester</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+    *{
+        margin: 0;
+        padding: 0;
+       
+    }
+    body{
+        background-color: rgba(230, 229, 229, 0.4);
+    }
+    section.header-content{
+        display: flex;
+        justify-content: center;
+        align-items: center;  
+        flex-direction: column;
+        height: 45dvh;
+        font-family: Inter;
+        padding: 2dvw 2dvh;
+    }
+    h1{
+        font-size: 6em;
+        color: transparent;
+        background-image: linear-gradient(to right, #000, #ff5e62);
+        -webkit-background-clip: text;
+        background-clip: text;
+        margin-bottom: 5dvh;
+
+    }
+    section.header-content > p {
+        font-size: 1.5em;
+    }
+   
+    section.input-content{
+        display: flex;
+        align-items: center;
+        justify-content: center ;
+        margin-top: 1dvh;
+        
+    }
+    footer{
+        position: absolute;
+        bottom: 2vh;
+        left: 43dvw;
+        font-size: large;
+    }
+    a{
+        color: black;
+        text-decoration: none;
+    }
+    input[type="text"]{
+        width: 290px;
+        height: 40px;
+        border-radius: 7px;
+        border: 1px solid rgba(0,0,0,0.1);
+        padding-left: 15px;
+        font-family: Inter;
+
+    }
+   button{
+        height: 40px;
+        width: 100px;
+        text-align: center;
+        background-color: #000;
+        border-radius: 7px;
+        color: white;
+        font-size: 1em;
+        font-family: Inter;
+        cursor: pointer;
+ 
+    }
+
+  </style>
+</head>
+<body>
+    <section class="header-content">
+        <h1>Rich Snippets Suggester</h1>
+        <p>Analyze your URL to find the rich snippet that better suits your website.</p>
+    </section>
+
+    <section class="input-content">
+        <form id="url-form">
+            <input type="text" id="url-text" placeholder="Paste your website URL" required>
+            <button type="submit">Search</button> <!-- Cambiado el input a un botón -->
+        </form>
+    </section>
+   
+    <section class="result-content">
+        <h2>Scraping Result:</h2>
+        <div id="scrape-result"></div>
+    </section>
+    <footer>
+        <p><span id="actual-year"></span> - Developed by <a href="https://github.com/frankymelero" target="_blank"> Franky Melero</a></p>
+    </footer>
+
+    <script type="text/javascript">
+        const actualYear = new Date().getFullYear();
+        document.getElementById('actual-year').textContent = actualYear;
+
+        const form = document.getElementById('url-form');
+        const scrapeResult = document.getElementById('scrape-result');
+        
+        form.addEventListener('submit', async function(event) {
+            event.preventDefault();
+            const url = document.getElementById('url-text').value;
+            console.log(url);
+
+            try {
+                const response = await fetch(`http://localhost:3000/api/v1/scrape?url=${encodeURIComponent(url)}`);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                const data = await response.json();
+                console.log('Resultado del scraping:', data.result);
+                scrapeResult.textContent = data.result; // Actualizar el contenido en el DOM
+            } catch (error) {
+                console.error('Error fetching data:', error);
+                scrapeResult.textContent = 'Error occurred while fetching data.';
+            }
+        });
+    </script>
+</body>
+</html>
+
+</body>
+</html>
